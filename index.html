@@ -34,16 +34,24 @@
             line-height: 1.6;
         }
 
-        .container {
+        header,
+        .upload-section,
+        .loading,
+        .error-message,
+        .success-message,
+        .result-section {
             max-width: 800px;
-            margin: 0 auto;
-            padding: 2rem;
+            margin-left: auto;
+            margin-right: auto;
+            padding-left: 2rem;
+            padding-right: 2rem;
             width: 100%;
         }
 
         header {
             text-align: center;
             margin-bottom: 3rem;
+            padding-top: 2rem;
         }
 
         h1 {
@@ -64,7 +72,8 @@
         .upload-section {
             background-color: var(--bg-secondary);
             border-radius: 12px;
-            padding: 2rem;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
             margin-bottom: 2rem;
             border: 1px solid var(--border);
             transition: all 0.3s ease;
@@ -119,7 +128,8 @@
         .result-section {
             background-color: var(--bg-secondary);
             border-radius: 12px;
-            padding: 2rem;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
             margin-bottom: 2rem;
             border: 1px solid var(--border);
             display: none;
@@ -148,7 +158,7 @@
             transition: all 0.3s ease;
             display: inline-flex;
             align-items: center;
-            gap: 0.5rem;
+            gap: 0.75rem;
         }
 
         .button:hover {
@@ -159,6 +169,12 @@
 
         .button:active {
             transform: translateY(0);
+        }
+
+        .button .icon {
+            width: 1.1em;
+            height: 1.1em;
+            fill: currentColor;
         }
 
         .button-secondary {
@@ -184,6 +200,8 @@
             justify-content: center;
             font-size: 1.5rem;
             z-index: 100;
+            padding: 0;
+            gap: 0;
         }
 
         .modal {
@@ -261,7 +279,8 @@
         }
 
         .form-group input,
-        .form-group textarea {
+        .form-group textarea,
+        .form-group select {
             width: 100%;
             padding: 0.75rem;
             background-color: var(--bg-tertiary);
@@ -270,10 +289,22 @@
             color: var(--text-primary);
             font-size: 1rem;
             transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-group select {
+            -webkit-appearance: none;
+            appearance: none;
+            background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='%23a0a0a0'%3E%3Cpath d='M7 10l5 5 5-5z'/%3E%3C/svg%3E");
+            background-repeat: no-repeat;
+            background-position: right 0.75rem center;
+            background-size: 1.5em;
+            padding-right: 2.5rem;
         }
 
         .form-group input:focus,
-        .form-group textarea:focus {
+        .form-group textarea:focus,
+        .form-group select:focus {
             outline: none;
             border-color: var(--accent);
             box-shadow: 0 0 0 2px rgba(74, 158, 255, 0.2);
@@ -310,7 +341,8 @@
         .loading {
             display: none;
             text-align: center;
-            padding: 2rem;
+            padding-top: 2rem;
+            padding-bottom: 2rem;
         }
 
         .spinner {
@@ -335,8 +367,14 @@
         }
 
         @media (max-width: 600px) {
-            .container {
-                padding: 1rem;
+            header,
+            .upload-section,
+            .loading,
+            .error-message,
+            .success-message,
+            .result-section {
+                padding-left: 1rem;
+                padding-right: 1rem;
             }
 
             h1 {
@@ -358,67 +396,84 @@
     </style>
 </head>
 <body>
-    <button class="button settings-button" id="settingsBtn" title="Settings">⚙️</button>
+    <button class="button settings-button" id="settingsBtn" title="Settings">
+        <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M19.479,10.092c.2-.48.319-.991.319-1.523a7.86,7.86,0,0,0-.319-1.524l2.129-1.657a.6.6,0,0,0,.111-.794l-2-3.464a.6.6,0,0,0-.73-.311l-2.488,1.009a8.27,8.27,0,0,0-2.6-1.556V.6a.6.6,0,0,0-.6-.6H8.1a.6.6,0,0,0-.6.6V2.266a8.27,8.27,0,0,0-2.6,1.556L2.41,2.813a.6.6,0,0,0-.73.311l-2,3.464a.6.6,0,0,0,.111.794l2.129,1.657a7.86,7.86,0,0,0-.319,1.524c0,.532.119,1.043.319,1.523L.281,13.749a.6.6,0,0,0-.111.794l2,3.464a.6.6,0,0,0,.73.311l2.488-1.009a8.27,8.27,0,0,0,2.6,1.556V23.4a.6.6,0,0,0,.6.6h3.8a.6.6,0,0,0,.6-.6V21.734a8.27,8.27,0,0,0,2.6-1.556l2.488,1.009a.6.6,0,0,0,.73-.311l2-3.464a.6.6,0,0,0-.111-.794ZM12,15.6a3.6,3.6,0,1,1,3.6-3.6A3.6,3.6,0,0,1,12,15.6Z"/></svg>
+    </button>
+    
+    <header>
+        <h1>Image Text Extractor</h1>
+        <p class="subtitle">Extract and reformat text from images using Gemini AI</p>
+    </header>
 
-    <div class="container">
-        <header>
-            <h1>Image Text Extractor</h1>
-            <p class="subtitle">Extract and reformat text from images using Gemini AI</p>
-        </header>
-
-        <div class="upload-section">
-            <div class="upload-area" id="uploadArea">
-                <div class="upload-icon">📷</div>
-                <p>Click to upload or drag and drop an image</p>
-                <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
-                    Supports JPG, PNG, GIF, WebP
-                </p>
-                <input type="file" id="fileInput" accept="image/*">
-            </div>
-            <div class="preview-section" id="previewSection">
-                <img class="preview-image" id="previewImage" alt="Preview">
-            </div>
+    <div class="upload-section">
+        <div class="upload-area" id="uploadArea">
+            <div class="upload-icon">📷</div>
+            <p>Click to upload or drag and drop an image</p>
+            <p style="color: var(--text-secondary); font-size: 0.9rem; margin-top: 0.5rem;">
+                Supports JPG, PNG, GIF, WebP
+            </p>
+            <input type="file" id="fileInput" accept="image/*">
         </div>
-
-        <div class="loading" id="loading">
-            <div class="spinner"></div>
-            <p>Processing image with Gemini AI...</p>
-        </div>
-
-        <div class="error-message" id="errorMessage"></div>
-        <div class="success-message" id="successMessage"></div>
-
-        <div class="result-section" id="resultSection">
-            <h3 style="margin-bottom: 1rem;">Extracted Text</h3>
-            <div class="result-text" id="resultText"></div>
-            <div class="button-group">
-                <button class="button" id="copyBtn">
-                    <span>📋</span> Copy Text
-                </button>
-                <button class="button button-secondary" id="clearBtn">
-                    <span>🗑️</span> Clear
-                </button>
-            </div>
+        <div class="preview-section" id="previewSection">
+            <img class="preview-image" id="previewImage" alt="Preview">
         </div>
     </div>
 
+    <div class="loading" id="loading">
+        <div class="spinner"></div>
+        <p>Processing image with Gemini AI...</p>
+    </div>
+
+    <div class="error-message" id="errorMessage"></div>
+    <div class="success-message" id="successMessage"></div>
+
+    <div class="result-section" id="resultSection">
+        <h3 style="margin-bottom: 1rem;">Extracted Text</h3>
+        <div class="result-text" id="resultText"></div>
+        <div class="button-group">
+            <button class="button" id="copyBtn">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16 1H4a2 2 0 0 0-2 2v14h2V3h12V1zm3 4H8a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2zm0 16H8V7h11v14z"/></svg>
+                Copy Text
+            </button>
+            <button class="button button-secondary" id="retryBtn">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M17.65 6.35C16.2 4.9 14.21 4 12 4c-4.42 0-7.99 3.58-7.99 8s3.57 8 7.99 8c3.73 0 6.84-2.55 7.73-6h-2.08c-.82 2.33-3.04 4-5.65 4-3.31 0-6-2.69-6-6s2.69-6 6-6c1.66 0 3.14.69 4.22 1.78L13 11h7V4l-2.35 2.35z"/></svg>
+                 Retry
+            </button>
+            <button class="button button-secondary" id="clearBtn">
+                <svg class="icon" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M6 19c0 1.1.9 2 2 2h8c1.1 0 2-.9 2-2V7H6v12zM19 4h-3.5l-1-1h-5l-1 1H5v2h14V4z"/></svg>
+                Clear
+            </button>
+        </div>
+    </div>
+    
     <div class="modal" id="settingsModal">
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Settings</h2>
-                <button class="close-button" id="closeModal">&times;</button>
+                <button class="close-button" id="closeModal">×</button>
             </div>
 
             <div class="form-group">
                 <label for="apiKey">Gemini API Key</label>
                 <input type="password" id="apiKey" placeholder="Enter your Gemini API key">
                 <p style="color: var(--text-secondary); font-size: 0.8rem; margin-top: 0.5rem;">
-                    Get your API key from <a href="https://makersuite.google.com/app/apikey" target="_blank" style="color: var(--accent);">Google AI Studio</a>
+                    Get your API key from <a href="https://aistudio.google.com/apikey" target="_blank" style="color: var(--accent);">Google AI Studio</a>
                 </p>
             </div>
 
             <div class="form-group">
-                <label for="customPrompt">Custom Prompt</label>
+                <label for="promptPreset">Prompt Preset</label>
+                <select id="promptPreset">
+                    <option value="Transcribe Question">Transcribe Question</option>
+                    <option value="Transcribe Question no fix">Transcribe Question (no fix)</option>
+                    <option value="Transcribe Questions">Transcribe Questions (plural)</option>
+                    <option value="Transcribe text">Transcribe Text (generic)</option>
+                    <option value="Custom">Custom</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="customPrompt">Prompt</label>
                 <textarea id="customPrompt" placeholder="Enter your custom prompt"></textarea>
             </div>
 
@@ -427,10 +482,15 @@
     </div>
 
     <script>
-        // Default prompt
-        const DEFAULT_PROMPT = `Transcribe and rewrite the question from the image. In the process, correct any spelling, grammatical, phrasing, or formatting errors. Ensure that any equations in the rewritten version are formatted using LaTeX (e.g., $a + b = 5$). Please respond with only the final, full resulting question.`;
+        const PRESET_PROMPTS = {
+            'Transcribe Question': `Transcribe and rewrite the question from the image. In the process, correct any spelling, grammatical, phrasing, or formatting errors. Ensure that any equations in the rewritten version are formatted using LaTeX (e.g., $a + b = 5$). Please respond with only the final, full resulting question.`,
+            'Transcribe Question no fix': `Transcribe and rewrite the question from the image. Ensure that any equations in the rewritten version are formatted using LaTeX (e.g., $a + b = 5$). Please respond with only the final, full resulting question.`,
+            'Transcribe Questions': `Transcribe and rewrite the questions from the image. Ensure that any equations in the rewritten version are formatted using LaTeX (e.g., $a + b = 5$).`,
+            'Transcribe text': `Transcribe and rewrite the text from the image. In the process, correct any spelling, grammatical, phrasing, or formatting errors. Ensure that any equations in the rewritten version are formatted using LaTeX (e.g., $a + b = 5$). Please respond with only the final, resulting text.`,
+        };
 
-        // DOM elements
+        const DEFAULT_PROMPT = PRESET_PROMPTS['Transcribe Question'];
+
         const uploadArea = document.getElementById('uploadArea');
         const fileInput = document.getElementById('fileInput');
         const previewSection = document.getElementById('previewSection');
@@ -442,34 +502,49 @@
         const resultText = document.getElementById('resultText');
         const copyBtn = document.getElementById('copyBtn');
         const clearBtn = document.getElementById('clearBtn');
+        const retryBtn = document.getElementById('retryBtn');
         const settingsBtn = document.getElementById('settingsBtn');
         const settingsModal = document.getElementById('settingsModal');
         const closeModal = document.getElementById('closeModal');
         const apiKeyInput = document.getElementById('apiKey');
+        const promptPresetSelect = document.getElementById('promptPreset');
         const customPromptInput = document.getElementById('customPrompt');
         const saveSettingsBtn = document.getElementById('saveSettings');
 
-        // Load settings from localStorage
         let apiKey = localStorage.getItem('geminiApiKey') || '';
         let customPrompt = localStorage.getItem('customPrompt') || DEFAULT_PROMPT;
+        let currentImageBase64 = null;
 
-        // Initialize settings inputs
-        apiKeyInput.value = apiKey;
-        customPromptInput.value = customPrompt;
+        function initializeSettings() {
+            apiKeyInput.value = apiKey;
+            customPromptInput.value = customPrompt;
 
-        // Event listeners
+            const matchingPreset = Object.keys(PRESET_PROMPTS).find(key => PRESET_PROMPTS[key] === customPrompt);
+            if (matchingPreset) {
+                promptPresetSelect.value = matchingPreset;
+            } else {
+                promptPresetSelect.value = 'Custom';
+            }
+        }
+
+        initializeSettings();
+
         uploadArea.addEventListener('click', () => fileInput.click());
         fileInput.addEventListener('change', handleFileSelect);
         uploadArea.addEventListener('dragover', handleDragOver);
         uploadArea.addEventListener('dragleave', handleDragLeave);
         uploadArea.addEventListener('drop', handleDrop);
+        
         copyBtn.addEventListener('click', copyText);
         clearBtn.addEventListener('click', clearAll);
+        retryBtn.addEventListener('click', handleRetry);
+        
         settingsBtn.addEventListener('click', () => settingsModal.style.display = 'flex');
         closeModal.addEventListener('click', () => settingsModal.style.display = 'none');
         saveSettingsBtn.addEventListener('click', saveSettings);
-
-        // Close modal when clicking outside
+        promptPresetSelect.addEventListener('change', handlePresetChange);
+        customPromptInput.addEventListener('input', () => promptPresetSelect.value = 'Custom');
+        
         settingsModal.addEventListener('click', (e) => {
             if (e.target === settingsModal) {
                 settingsModal.style.display = 'none';
@@ -507,26 +582,44 @@
             const reader = new FileReader();
             
             reader.onload = function(e) {
-                previewImage.src = e.target.result;
+                currentImageBase64 = e.target.result;
+                previewImage.src = currentImageBase64;
                 previewSection.style.display = 'block';
-                processImage(e.target.result);
+                processImage(currentImageBase64);
             };
             
             reader.readAsDataURL(file);
         }
 
+        function handleRetry() {
+            if (currentImageBase64) {
+                processImage(currentImageBase64);
+            } else {
+                showError("No image to retry. Please upload an image first.");
+            }
+        }
+        
+        function handlePresetChange() {
+            const selectedValue = promptPresetSelect.value;
+            if (selectedValue !== 'Custom') {
+                customPromptInput.value = PRESET_PROMPTS[selectedValue];
+            }
+        }
+
         async function processImage(base64Image) {
             if (!apiKey) {
                 showError('Please set your Gemini API key in settings.');
+                settingsModal.style.display = 'flex';
                 return;
             }
 
             showLoading();
             hideMessages();
+            resultSection.style.display = 'none';
 
             try {
-                // Remove data URL prefix to get pure base64
                 const base64Data = base64Image.split(',')[1];
+                const prompt = customPromptInput.value;
 
                 const response = await fetch('https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash-exp:generateContent', {
                     method: 'POST',
@@ -537,9 +630,7 @@
                     body: JSON.stringify({
                         contents: [{
                             parts: [
-                                {
-                                    text: customPrompt
-                                },
+                                { text: prompt },
                                 {
                                     inline_data: {
                                         mime_type: getMimeType(base64Image),
@@ -561,7 +652,7 @@
                     const extractedText = data.candidates[0].content.parts[0].text;
                     displayResult(extractedText);
                 } else {
-                    throw new Error('No text extracted from image');
+                    throw new Error('No text extracted from image. The model may have blocked the response.');
                 }
 
             } catch (error) {
@@ -573,8 +664,7 @@
         }
 
         function getMimeType(dataUrl) {
-            const match = dataUrl.match(/^data:([^;]+);/);
-            return match ? match[1] : 'image/jpeg';
+            return dataUrl.substring(dataUrl.indexOf(":") + 1, dataUrl.indexOf(";"));
         }
 
         function displayResult(text) {
@@ -596,6 +686,7 @@
             previewSection.style.display = 'none';
             resultSection.style.display = 'none';
             fileInput.value = '';
+            currentImageBase64 = null;
             hideMessages();
         }
 
@@ -630,7 +721,9 @@
             errorMessage.style.display = 'none';
             
             setTimeout(() => {
-                successMessage.style.display = 'none';
+                if (successMessage.style.display === 'block') {
+                    successMessage.style.display = 'none';
+                }
             }, 3000);
         }
 
